@@ -62,13 +62,13 @@ bool BiTreePrintInOrder (struct bi_tree_node* root,void (* dataPrint)(BT_ELEM_TY
 }
 
 struct bi_tree_node* BiTreeIndexInOrder 
-    (struct bi_tree_node* root,BT_ELEM_TYPE data,int (* dataCmp)(BT_ELEM_TYPE* a,BT_ELEM_TYPE* b)) 
+    (struct bi_tree_node* root,BT_ELEM_TYPE* data,int (* dataCmp)(BT_ELEM_TYPE* a,BT_ELEM_TYPE* b)) 
 {
     if (root==NULL) return NULL;
 
-    if (dataCmp(&data,&root->data)==0) return root;
+    if (dataCmp(data,&root->data)==0) return root;
 
-    else return dataCmp(&data,&root->data)<0 ?
+    else return dataCmp(data,&root->data)<0 ?
     BiTreeIndexInOrder(root->l_branch,data,dataCmp):
     BiTreeIndexInOrder(root->r_branch,data,dataCmp);
 
@@ -79,20 +79,28 @@ bool BiTreeDeleteInOrder (struct bi_tree_node** node_ptr) {
     if(*node_ptr==NULL) return true;
 
     if((*node_ptr)->l_branch!=NULL) {
-        if((*node_ptr)->l_branch->r_branch==NULL) return BiTreeDeleteInOrder(&(*node_ptr)->l_branch);
+        if((*node_ptr)->l_branch->r_branch==NULL) {
+            (*node_ptr)->data = (*node_ptr)->l_branch->data;
+            return BiTreeDeleteInOrder(&(*node_ptr)->l_branch);
+        }
         else {
             struct bi_tree_node* p = (*node_ptr)->l_branch;
             while (p->r_branch->r_branch!=NULL)
                 p=p->r_branch;
+            (*node_ptr)->data = p->r_branch->data;
             return BiTreeDeleteInOrder(&(p->r_branch));
         }
     }
     else if((*node_ptr)->r_branch!=NULL) {
-        if((*node_ptr)->r_branch->l_branch==NULL) return BiTreeDeleteInOrder(&(*node_ptr)->r_branch);
+        if((*node_ptr)->r_branch->l_branch==NULL) {
+            (*node_ptr)->data = (*node_ptr)->r_branch->data;
+            return BiTreeDeleteInOrder(&(*node_ptr)->r_branch);
+        }
         else {
             struct bi_tree_node* p = (*node_ptr)->r_branch;
             while (p->l_branch->l_branch!=NULL)
                 p=p->l_branch;
+            (*node_ptr)->data = p->l_branch->data;
             return BiTreeDeleteInOrder(&(p->l_branch));
         }
     }
@@ -102,4 +110,52 @@ bool BiTreeDeleteInOrder (struct bi_tree_node** node_ptr) {
     }
 
     return true;
+}
+
+bool BiTreeDeleteBydata 
+    (struct bi_tree_node** root, BT_ELEM_TYPE* data,int (* dataCmp)(BT_ELEM_TYPE* a,BT_ELEM_TYPE* b)) 
+{
+    if(root==NULL||*root==NULL) return false;
+
+    int cmp = dataCmp(data,&(*root)->data);
+
+    if(cmp==0) {
+        if((*root)->l_branch!=NULL) {
+            if((*root)->l_branch->r_branch==NULL) {
+                (*root)->data = (*root)->l_branch->data;
+                return BiTreeDeleteInOrder(&(*root)->l_branch);
+            }
+            else {
+                struct bi_tree_node* p = (*root)->l_branch;
+                while (p->r_branch->r_branch!=NULL)
+                    p=p->r_branch;
+                (*root)->data = p->r_branch->data;
+                return BiTreeDeleteInOrder(&p->r_branch);
+            }
+        }
+        else if ((*root)->r_branch!=NULL) {
+            if((*root)->r_branch->l_branch==NULL) {
+                (*root)->data = (*root)->r_branch->data;
+                return BiTreeDeleteInOrder(&(*root)->r_branch);
+            }
+            else {
+                struct bi_tree_node* p = (*root)->r_branch;
+                while (p->l_branch->l_branch!=NULL)
+                    p=p->l_branch;
+                (*root)->data = p->l_branch->data;
+                return BiTreeDeleteInOrder(&p->l_branch);
+            }
+        }
+        else {
+            free(*root);
+            *root = NULL;
+        }
+        return true;
+    }
+    else if(cmp<0) {
+        return BiTreeDeleteBydata(&(*root)->l_branch,data,dataCmp);
+    }
+    else {
+        return BiTreeDeleteBydata(&(*root)->r_branch,data,dataCmp);
+    }
 }

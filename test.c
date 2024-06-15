@@ -39,9 +39,14 @@ int main () {
     BiTreePrintInOrder(my_tree,printData);
 
     printf("\n");
-    strcpy(tmp_data.name,"Saul"); tmp_data.val = 45;
-    printData(&BiTreeIndexInOrder(my_tree,tmp_data,cmp)->data);
+    strcpy(tmp_data.name,"Jessie"); tmp_data.val = 1455;
+    printf("______node to delete______\n");
+    printData(&BiTreeIndexInOrder(my_tree,&tmp_data,cmp)->data);
+    BiTreeDeleteBydata(&my_tree,&tmp_data,cmp);
 
+    printf("\n");
+    printf("______after delete_______\n");
+    BiTreePrintInOrder(my_tree,printData);
 
     BiTreeDestroy(my_tree);
 

@@ -28,8 +28,11 @@ bool BiTreeInsertInOrder (struct bi_tree_node* root,struct bi_tree_node* new_nod
 bool BiTreePrintInOrder (struct bi_tree_node* root,void (* dataPrint)(BT_ELEM_TYPE* data));
 
 struct bi_tree_node* BiTreeIndexInOrder 
-    (struct bi_tree_node* root,BT_ELEM_TYPE data,int (* dataCmp)(BT_ELEM_TYPE* a,BT_ELEM_TYPE* b));
+    (struct bi_tree_node* root,BT_ELEM_TYPE* data,int (* dataCmp)(BT_ELEM_TYPE* a,BT_ELEM_TYPE* b));
 
 bool BiTreeDeleteInOrder (struct bi_tree_node** node_ptr);
+
+bool BiTreeDeleteBydata 
+    (struct bi_tree_node** root, BT_ELEM_TYPE* data,int (* dataCmp)(BT_ELEM_TYPE* a,BT_ELEM_TYPE* b));
 
 #endif
