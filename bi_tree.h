@@ -21,7 +21,7 @@ struct bi_tree_node {
 
 struct bi_tree_node* BiTreeNodeInit (BT_ELEM_TYPE data);
 
-bool BiTreeDestroy (struct bi_tree_node* root);
+void BiTreeDestroy (struct bi_tree_node* root);
 
 bool BiTreeInsertInOrder (struct bi_tree_node* root,struct bi_tree_node* new_node,int (* dataCmp)(BT_ELEM_TYPE* a,BT_ELEM_TYPE* b));
 

@@ -15,12 +15,13 @@ struct bi_tree_node* BiTreeNodeInit (BT_ELEM_TYPE data) {
     return new_node;
 }
 
-bool BiTreeDestroy (struct bi_tree_node* root) {
-    if (root==NULL) return true;
+void BiTreeDestroy (struct bi_tree_node* root) {
+    if (root==NULL) return;
     if (root->l_branch != NULL) BiTreeDestroy(root->l_branch);
     if (root->r_branch != NULL) BiTreeDestroy(root->r_branch);
 
     free(root);
+    return;
 }
 
 bool BiTreeInsertInOrder (struct bi_tree_node* root,struct bi_tree_node* new_node,
